@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 
 export interface IUser extends Document {
     email: string,
-    password: string
+    password: string,
+    comparePassword: (password: string) => Promise<boolean>
 }
 
 const userSchema = new Schema<IUser> ({
@@ -34,7 +35,7 @@ userSchema.pre<IUser>('save', async function(next) {
 })
 
 //compare password
-userSchema.methods.comparedPassword = async function(password: string): Promise<boolean> {
+userSchema.methods.comparePassword = async function(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.password)
 }
 
